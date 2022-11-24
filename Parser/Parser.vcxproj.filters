@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="소스 파일">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="헤더 파일">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="리소스 파일">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="소스 파일\reader">
+      <UniqueIdentifier>{99977a83-c5ab-4026-a032-9e6334dba3f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\data_struct">
+      <UniqueIdentifier>{a4da069e-f34c-4ffe-86a2-0f29e4759dab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\data_struct\lexeme_arr">
+      <UniqueIdentifier>{e1a859fd-a2ac-41f3-9add-af8c3b95beef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\preprocessor">
+      <UniqueIdentifier>{0d54756f-7f86-4ec8-906d-09c2d14f66f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\lexer">
+      <UniqueIdentifier>{288f638d-d276-4ccb-990e-a0ad518e9c31}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\parser">
+      <UniqueIdentifier>{1c5a1064-6add-4ea1-bc8b-3214abc6d90b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="reader.c">
+      <Filter>소스 파일\reader</Filter>
+    </ClCompile>
+    <ClCompile Include="lexeme_arr.c">
+      <Filter>소스 파일\data_struct\lexeme_arr</Filter>
+    </ClCompile>
+    <ClCompile Include="preprocessor.c">
+      <Filter>소스 파일\preprocessor</Filter>
+    </ClCompile>
+    <ClCompile Include="lexer.c">
+      <Filter>소스 파일\lexer</Filter>
+    </ClCompile>
+    <ClCompile Include="parser.c">
+      <Filter>소스 파일\parser</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="test.npl">
+      <Filter>소스 파일</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="logger.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="reader.h">
+      <Filter>소스 파일\reader</Filter>
+    </ClInclude>
+    <ClInclude Include="datastc.h">
+      <Filter>소스 파일\data_struct</Filter>
+    </ClInclude>
+    <ClInclude Include="lexeme_arr.h">
+      <Filter>소스 파일\data_struct\lexeme_arr</Filter>
+    </ClInclude>
+    <ClInclude Include="preprocessor.h">
+      <Filter>소스 파일\preprocessor</Filter>
+    </ClInclude>
+    <ClInclude Include="lexer.h">
+      <Filter>소스 파일\lexer</Filter>
+    </ClInclude>
+    <ClInclude Include="parser.h">
+      <Filter>소스 파일\parser</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

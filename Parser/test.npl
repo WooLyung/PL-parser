@@ -1,0 +1,14 @@
+class Patient {
+int height;
+int weight;
+int number;
+void printInfo() {
+ Print (this, ", " , this, ", ", this, "\n" );
+ }
+}
+void main() {
+ Patient brian;
+ brian = new Patient;
+ brian;
+ printInfo();
+}
