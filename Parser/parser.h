@@ -13,6 +13,6 @@ typedef struct rule {
 bool parse(terminals tms, unsigned idx, token_stream stream, unsigned size, unsigned* max_line);
 parse_tree make_parse_tree(token_stream stream, unsigned size);
 void make_parse_tree_node(parse_node_t* node, int num, token_stream stream, unsigned size);
-void make_symbol_table(parse_node_t* node, symbol_entry_t* symbol_table, unsigned* symbol_table_size, unsigned* scope_parents, unsigned* scope_size, unsigned scope);
+void make_symbol_table(parse_node_t* node, symbol_entry_t* symbol_table, unsigned* symbol_table_size, unsigned* scope_parents, unsigned* scope_size, unsigned scope, char file[1024][1024]);
 
 #endif

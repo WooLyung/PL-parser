@@ -145,6 +145,7 @@
     <ClCompile Include="parser.c" />
     <ClCompile Include="preprocessor.c" />
     <ClCompile Include="reader.c" />
+    <ClCompile Include="semantic_analyzer.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="test.npl" />
@@ -157,6 +158,7 @@
     <ClInclude Include="parser.h" />
     <ClInclude Include="preprocessor.h" />
     <ClInclude Include="reader.h" />
+    <ClInclude Include="semantic_analyzer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

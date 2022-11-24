@@ -46,7 +46,7 @@ token_stream lexical_analysis(scanned_stream stream, unsigned* size, unsigned* c
 		if (code)
 		{
 
-			lexeme_t lx = make_lexeme(name, code, line, stream[i + code - 1].rwhite);
+			lexeme_t lx = make_lexeme(name, 3, line, stream[i + code - 1].rwhite);
 			for (unsigned j = 1; j < code; j++)
 				strcat(lx.name, stream[i + j].name);
 			lexeme_arr_add(&newstream, &s, &cp, lx);
@@ -58,7 +58,7 @@ token_stream lexical_analysis(scanned_stream stream, unsigned* size, unsigned* c
 		code = check_integer(stream, *size, i);
 		if (code)
 		{
-			lexeme_t lx = make_lexeme(name, code, line, stream[i + code - 1].rwhite);
+			lexeme_t lx = make_lexeme(name, 2, line, stream[i + code - 1].rwhite);
 			for (unsigned j = 1; j < code; j++)
 				strcat(lx.name, stream[i + j].name);
 			lexeme_arr_add(&newstream, &s, &cp, lx);
@@ -82,6 +82,7 @@ token_stream lexical_analysis(scanned_stream stream, unsigned* size, unsigned* c
 		}
 
 		code = check_sign(name);
+
 		if (code)
 		{
 			lexeme_arr_add(&newstream, &s, &cp, make_lexeme(name, code, line, rwhite));

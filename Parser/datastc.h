@@ -19,6 +19,7 @@ typedef struct parse_node
 	char name[MAX_LEXEME_LEN]; // :null:nonterminal
 	int symbol;
 	int line;
+	unsigned scope;
 	struct parse_node* childs[20];
 } parse_node_t;
 
@@ -149,4 +150,5 @@ typedef terminal_t* terminals;
  * 2037					Actuals
  * 2038					Constant
  * 2039					ExprT
+ * 2040					VarIdent
  */

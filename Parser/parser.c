@@ -5,6 +5,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
+#include "logger.h"
 
 rule_t rules[] = {
 	{ false, 2001, { 2002, 0 } },
@@ -84,8 +85,8 @@ rule_t rules[] = {
 	{ false, 2029, { 2034, 0 } },
 	{ false, 2029, { 2034, 20, 2029, 0 } },
 	{ false, 2034, { 2039, 0 } },
-	{ false, 2039, { 1, 0 } },
-	{ false, 2039, { 1, 13, 2034, 0 } },
+	{ false, 2039, { 2040, 0 } },
+	{ false, 2039, { 2040, 13, 2034, 0 } },
 	{ false, 2039, { 2038, 0 } },
 	{ false, 2039, { 43, 0 } },
 	{ false, 2039, { 1, 24, 25, 0 } },
@@ -114,7 +115,8 @@ rule_t rules[] = {
 	{ false, 2038, { 3, 0 } },
 	{ false, 2038, { 55, 0 } },
 	{ false, 2038, { 54, 0 } },
-	{ false, 2038, { 41, 0 } }
+	{ false, 2038, { 41, 0 } },
+	{ false, 2040, { 1, 0 } }
 };
 
 int d_by[1024] = { 0, };
@@ -125,16 +127,6 @@ bool parse(terminals tms, unsigned idx, token_stream stream, unsigned size, unsi
 {
 	static int curr = -1;
 	curr++;
-
-	//printf("%d: ", d_by);
-	//for (int a = 0; a < 1024; a++)
-	//{
-	//	if (tms[a].token == -1)
-	//		break;
-	//	printf("%d ", tms[a].token);
-	//}
-	//printf("\n");
-
 	unsigned i = idx;
 
 	while (true)
@@ -144,7 +136,6 @@ bool parse(terminals tms, unsigned idx, token_stream stream, unsigned size, unsi
 			if (tms[i].token == -1)
 			{
 				end_point = curr;
-				printf("complete\n");
 				curr--;
 				return true;
 			}
@@ -157,7 +148,7 @@ bool parse(terminals tms, unsigned idx, token_stream stream, unsigned size, unsi
 
 		if (tms[i].token > 2000)
 		{
-			for (int r = 0; r < 107; r++)
+			for (int r = 0; r < 109; r++)
 			{
 				if (rules[r].left == tms[i].token)
 				{
@@ -245,26 +236,38 @@ bool parse(terminals tms, unsigned idx, token_stream stream, unsigned size, unsi
 int childs[1024][1024] = { 0, };
 int idx = 0;
 
-void make_symbol_table(parse_node_t* node, symbol_entry_t* symbol_table, unsigned* symbol_table_size, unsigned* scope_parents, unsigned* scope_size, unsigned scope)
+void make_symbol_table(parse_node_t* node, symbol_entry_t* symbol_table, unsigned* symbol_table_size, unsigned* scope_parents, unsigned* scope_size, unsigned scope, char file[1024][1024])
 {
+	node->scope = scope;
+
 	if (node->rule != -1)
 	{
 		// in scope
 		if (node->symbol == 2001 || node->symbol == 2010 || node->symbol == 2019 || node->symbol == 2007)
 		{
-			printf("new scope : %d\n", node->symbol);
-
 			unsigned nscope = *scope_size;
 			scope_parents[nscope] = scope;
 			(*scope_size)++;
 
 			for (int p = 0; node->childs[p]; p++)
-				make_symbol_table(node->childs[p], symbol_table, symbol_table_size, scope_parents, scope_size, nscope);
+				make_symbol_table(node->childs[p], symbol_table, symbol_table_size, scope_parents, scope_size, nscope, file);
 		}
 		else
 		{
 			if (node->symbol == 2005)
 			{
+				for (int i = 0; i < *symbol_table_size; i++)
+				{
+					if (strcmp(symbol_table[i].name, node->childs[1]->name) == 0)
+					{
+						LOG_E("duplicated variable error: error line %d", node->childs[1]->line);
+						LOG_E("%s", file[node->childs[1]->line]);
+						LOG_E("");
+
+						exit(1);
+					}
+				}
+
 				strcpy(symbol_table[*symbol_table_size].name, node->childs[1]->name);
 				strcpy(symbol_table[*symbol_table_size].type, node->childs[0]->name);
 				symbol_table[*symbol_table_size].scope = scope;
@@ -272,7 +275,7 @@ void make_symbol_table(parse_node_t* node, symbol_entry_t* symbol_table, unsigne
 			}
 
 			for (int p = 0; node->childs[p]; p++)
-				make_symbol_table(node->childs[p], symbol_table, symbol_table_size, scope_parents, scope_size, scope);
+				make_symbol_table(node->childs[p], symbol_table, symbol_table_size, scope_parents, scope_size, scope, file);
 		}
 	}
 }
@@ -292,6 +295,7 @@ parse_tree make_parse_tree(token_stream stream, unsigned size)
 	root->line = -1;
 	root->rule = 0;
 	root->symbol = 2001;
+	root->scope = 0;
 
 	make_parse_tree_node(root, 0, stream, size);
 
@@ -314,6 +318,7 @@ void make_parse_tree_node(parse_node_t* node, int num, token_stream stream, unsi
 			nn->line = -1;
 			nn->rule = d_by_rule[childs[num][t]];
 			nn->symbol = rules[d_by_rule[childs[num][t]]].left;
+			nn->scope = 0;
 
 			node->childs[r] = nn;
 			make_parse_tree_node(nn, childs[num][t], stream, size);
@@ -329,6 +334,7 @@ void make_parse_tree_node(parse_node_t* node, int num, token_stream stream, unsi
 			nn->line = stream[idx].line;
 			nn->rule = -1;
 			nn->symbol = stream[idx].token;
+			nn->scope = 0;
 			idx++;
 
 			node->childs[r] = nn;

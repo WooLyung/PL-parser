@@ -112,6 +112,8 @@ bool split_by1(const char* buffer, unsigned len)
 	if (len < 2)
 		return false;
 
+	if (buffer[len - 2] == ':')
+		return true;
 	if (buffer[len - 2] == '"')
 		return true;
 	if (buffer[len - 2] == '+')

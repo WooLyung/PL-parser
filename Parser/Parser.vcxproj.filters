@@ -31,6 +31,9 @@
     <Filter Include="소스 파일\parser">
       <UniqueIdentifier>{1c5a1064-6add-4ea1-bc8b-3214abc6d90b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\semantic_analyzer">
+      <UniqueIdentifier>{ae05c818-02d5-4e80-8889-10850e9bde3d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.c">
@@ -50,6 +53,9 @@
     </ClCompile>
     <ClCompile Include="parser.c">
       <Filter>소스 파일\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="semantic_analyzer.c">
+      <Filter>소스 파일\semantic_analyzer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -78,6 +84,9 @@
     </ClInclude>
     <ClInclude Include="parser.h">
       <Filter>소스 파일\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="semantic_analyzer.h">
+      <Filter>소스 파일\semantic_analyzer</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

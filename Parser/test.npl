@@ -7,14 +7,25 @@ class Patient {
 		Print (this, ", " , this, ", ", this, "\n" );
 	}
 }
-void main() {
-	Patient brian;
+void main(int brian) {
+	int sans;
+	
+	
 	brian = new Patient;
+	
 	brian;
 	printInfo();
 
-	for (1;1;1)
+
+	for (brian; brian; sans)
 	{
-		int k;
+		switch (brian)
+		{
+			case:
+				Print ( "" );
+				break;
+			default:
+				Print ("");
+		}
 	}
 }

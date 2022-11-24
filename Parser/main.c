@@ -9,6 +9,7 @@
 #include "preprocessor.h"
 #include "lexer.h"
 #include "parser.h"
+#include "semantic_analyzer.h"
 
 #define MAX_FILE_NAME_LEN 64
 
@@ -92,22 +93,26 @@ int main()
 		scope_size = 1;
 
 		root = make_parse_tree(token_s, size);
-		make_symbol_table(root, symbol_table, &symbol_table_size, scope_parents, &scope_size, 0);
-
-
-		for (int i = 0; i < symbol_table_size; i++)
-			printf("%s %s (%d)\n", symbol_table[i].type, symbol_table[i].name, symbol_table[i].scope);
-
-		for (int i = 1; i < scope_size; i++)
-			printf("%d -> %d\n", scope_parents[i], i);
+		make_symbol_table(root, symbol_table, &symbol_table_size, scope_parents, &scope_size, 0, file);
 	}
-
-	//printf("%d, %d\n", result, max_line);
-	//for (unsigned i = 0; i < size; i++)
-	//	printf("%d ", token_s[i].token);
-	//printf("\n");
+	LOG_I("finish parser ........................");
 
 	// semantic analyzer
+	LOG_I("execute semantic analyzer ............");
+	int err_line = check_var_define(root, symbol_table, symbol_table_size, scope_parents, scope_size);
+	if (err_line)
+	{
+		LOG_E("undefined variable error: error line %d", err_line);
+		LOG_E("%s", file[err_line]);
+		LOG_E("");
+
+		exit(1);
+	}
+	else
+		LOG_I("finish semantic analyzer .............");
+
+	LOG_I("");
+	LOG_I("compilation success");
 
 	return 0;
 }
