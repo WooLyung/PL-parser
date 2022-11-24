@@ -22,6 +22,13 @@ typedef struct parse_node
 	struct parse_node* childs[20];
 } parse_node_t;
 
+typedef struct symbol_entry
+{
+	char type[MAX_LEXEME_LEN];
+	char name[MAX_LEXEME_LEN];
+	int scope;
+} symbol_entry_t;
+
 typedef struct terminal
 {
 	int token;

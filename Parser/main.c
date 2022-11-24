@@ -14,6 +14,19 @@
 
 char file[1024][1024];
 
+// intermediate results
+scanned_stream scan_s;
+token_stream token_s;
+terminal_t tms[1024];
+parse_tree root;
+
+symbol_entry_t symbol_table[1024];
+unsigned scope_parents[1024];
+unsigned symbol_table_size = 0;
+unsigned scope_size = 0;
+
+unsigned max_line = 0;
+
 int main()
 {
 	// variables
@@ -21,12 +34,6 @@ int main()
 	FILE* fp;
 	unsigned size;
 	unsigned cap;
-
-	// intermediate results
-	scanned_stream scan_s;
-	token_stream token_s;
-	terminal_t tms[1024];
-	unsigned max_line = 0;
 
 	// input file name
 	printf("source file name: ");
@@ -80,7 +87,19 @@ int main()
 	}
 	else
 	{
-		make_parse_tree(token_s, size);
+		for (int i = 0; i < 1024; i++)
+			scope_parents[i] = 0;
+		scope_size = 1;
+
+		root = make_parse_tree(token_s, size);
+		make_symbol_table(root, symbol_table, &symbol_table_size, scope_parents, &scope_size, 0);
+
+
+		for (int i = 0; i < symbol_table_size; i++)
+			printf("%s %s (%d)\n", symbol_table[i].type, symbol_table[i].name, symbol_table[i].scope);
+
+		for (int i = 1; i < scope_size; i++)
+			printf("%d -> %d\n", scope_parents[i], i);
 	}
 
 	//printf("%d, %d\n", result, max_line);

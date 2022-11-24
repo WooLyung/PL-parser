@@ -69,7 +69,7 @@ rule_t rules[] = {
 	{ false, 2022, { 2030, 0 } },
 	{ false, 2023, { 39, 24, 2034, 25, 2022, 36, 2022, 0 } },
 	{ false, 2024, { 44, 24, 2034, 25, 2022, 0 } },
-	{ false, 2025, { 38, 24, 2034, 19, 2034, 25, 2022, 0 } },
+	{ false, 2025, { 38, 24, 2034, 19, 2034, 19, 2034, 25, 2022, 0 } },
 	{ false, 2026, { 42, 2034, 19, 0 } },
 	{ false, 2027, { 34, 19, 0 } },
 	{ false, 2028, { 46, 24, 2029, 25, 19, 0 } },
@@ -121,8 +121,7 @@ int d_by[1024] = { 0, };
 int d_by_rule[1024] = { 0, };
 int end_point = 0;
 
-bool parse(terminals tms, unsigned idx, token_stream stream, unsigned size,
-	unsigned* max_line)
+bool parse(terminals tms, unsigned idx, token_stream stream, unsigned size, unsigned* max_line)
 {
 	static int curr = -1;
 	curr++;
@@ -156,13 +155,10 @@ bool parse(terminals tms, unsigned idx, token_stream stream, unsigned size,
 			}
 		}
 
-		// 논터미널
 		if (tms[i].token > 2000)
 		{
-			// 룰을 하나씩 적용해보면서 가능한지 여부 확인하기
 			for (int r = 0; r < 107; r++)
 			{
-				// 왼쪽이 현재 심볼일 경우 (규칙 적용 가능)
 				if (rules[r].left == tms[i].token)
 				{
 					unsigned max = 0;
@@ -230,7 +226,6 @@ bool parse(terminals tms, unsigned idx, token_stream stream, unsigned size,
 		}
 		else
 		{
-			// 다른 토큰이 발견되면 끝
 			if (tms[i].token != stream[i].token)
 			{
 				curr--;
@@ -250,40 +245,44 @@ bool parse(terminals tms, unsigned idx, token_stream stream, unsigned size,
 int childs[1024][1024] = { 0, };
 int idx = 0;
 
-void dfs(parse_node_t* node)
+void make_symbol_table(parse_node_t* node, symbol_entry_t* symbol_table, unsigned* symbol_table_size, unsigned* scope_parents, unsigned* scope_size, unsigned scope)
 {
-	if (node->rule == -1)
-		printf("terminal: %s\n", node->name);
-	else
+	if (node->rule != -1)
 	{
-		printf("nonterminal: %d\n", node->symbol);
-
-		for (int r = 0; node->childs[r]; r++)
+		// in scope
+		if (node->symbol == 2001 || node->symbol == 2010 || node->symbol == 2019 || node->symbol == 2007)
 		{
-			dfs(node->childs[r]);
+			printf("new scope : %d\n", node->symbol);
+
+			unsigned nscope = *scope_size;
+			scope_parents[nscope] = scope;
+			(*scope_size)++;
+
+			for (int p = 0; node->childs[p]; p++)
+				make_symbol_table(node->childs[p], symbol_table, symbol_table_size, scope_parents, scope_size, nscope);
+		}
+		else
+		{
+			if (node->symbol == 2005)
+			{
+				strcpy(symbol_table[*symbol_table_size].name, node->childs[1]->name);
+				strcpy(symbol_table[*symbol_table_size].type, node->childs[0]->name);
+				symbol_table[*symbol_table_size].scope = scope;
+				(*symbol_table_size)++;
+			}
+
+			for (int p = 0; node->childs[p]; p++)
+				make_symbol_table(node->childs[p], symbol_table, symbol_table_size, scope_parents, scope_size, scope);
 		}
 	}
 }
 
-void make_parse_tree(token_stream stream, unsigned size)
+parse_tree make_parse_tree(token_stream stream, unsigned size)
 {
 	for (int i = 0; i < end_point; i++)
 	{
 		if (i != 0)
 			childs[d_by[i]][++childs[d_by[i]][0]] = i;
-		printf("%d -> %d [%d] - %d\n", d_by[i], i, d_by_rule[i], rules[d_by_rule[i]].left);
-	}
-
-	for (int i = 0; i < end_point; i++)
-	{
-		printf("%d : ", i);
-		int t = 1;
-		while (childs[i][t])
-		{
-			printf("%d ", childs[i][t]);
-			t++;
-		}
-		printf("\n");
 	}
 
 	parse_node_t* root = malloc(sizeof(parse_node_t));
@@ -296,7 +295,7 @@ void make_parse_tree(token_stream stream, unsigned size)
 
 	make_parse_tree_node(root, 0, stream, size);
 
-	dfs(root);
+	return root;
 }
 
 void make_parse_tree_node(parse_node_t* node, int num, token_stream stream, unsigned size)
